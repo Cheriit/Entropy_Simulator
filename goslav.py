@@ -33,6 +33,7 @@ class Pojemnik:
 
     def __str__(self):
         return f"Pojemnik po rozmiarach {self.width} x {self.height}, zawierający {len(self.atoms)} cząstek"
+# TODO: Zrobić dokumentację
 
 
 if __name__ == "__main__":

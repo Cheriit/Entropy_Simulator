@@ -25,13 +25,14 @@ class Atom:
 
 
 class Pojemnik:
-    def __init__(self, x, y):
+    def __init__(self):
         config = configparser.ConfigParser()
         config.read('config.ini')
         self.config = config['Pojemnik']
         self.width = int(self.config['width'])
         self.height = int(self.config['height'])
         self.tickrate = int(self.config['tickrate'])
+        self.number_of_atoms = int(self.config['number_of_atoms'])
 
         self.atoms = []
         for h in range(self.height):
@@ -43,7 +44,6 @@ class Pojemnik:
 
     def __str__(self):
         return f"Pojemnik po rozmiarach {self.width} x {self.height}, zawierający {len(self.atoms)} cząstek"
-# TODO: Zrobić dokumentację
 
 
 if __name__ == "__main__":
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     for i in range(3):
         atomy.append(Atom(1, 1, 1, 1))
     print(atomy[1].access_atom())
-    pojemnik = Pojemnik(5, 5)
+    pojemnik = Pojemnik()
     for i in range(5):
         print(pojemnik.atoms[i].access_atom())
     for i in range(5):

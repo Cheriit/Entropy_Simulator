@@ -19,3 +19,7 @@ pip install -r ./requirements.txt
 ## Required software:
 * Git - https://git-scm.com/downloads
 * Python 3.7 - https://www.python.org/downloads/
+
+
+How to use git:
+https://rogerdudler.github.io/git-guide/

@@ -10,7 +10,7 @@ def STOP():
     start.config(state=NORMAL)
 okno = Tk()
 ramki=20
-okno.title('Anhalteweg')
+okno.title('Entropia')
 okno.geometry(str(ramki*55-79)+'x'+str((ramki//2)*55+80))
 frstart=Frame(master=okno,background='#F3E77F')
 frstart.place(x=1, y=1, width=ramki*55-77, height=104)

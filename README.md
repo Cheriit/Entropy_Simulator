@@ -11,7 +11,7 @@ pip install -r ./requirements.txt
 
 ## Project files:
 * *README.md* - Short "documentation"
-* *Zadanie programistyczne_kor_1.pdf* - Exercise description
+* *exercise.pdf* - Exercise description
 * *requirements.txt* - required libraries (quick installation)
 ## Proposed editor:
 * Pycharm (register using study mail)

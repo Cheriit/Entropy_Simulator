@@ -6,8 +6,10 @@ class Atom:
         self.config = config
         self.pos = (x, y)
         self.speed = (speed_x, speed_y)
-        self.radius =0# float(self.config['radius'])
+        self.radius =4# float(self.config['radius'])
         self.name = name
+        self.color= '#%02x%02x%02x' %(
+            r.randint(0,255),r.randint(0,255),r.randint(0,255))
 
     def __str__(self):
         return f"Atom \"{self.name}\"\n" \
@@ -28,13 +30,16 @@ def Generuj():
     start.config(state=NORMAL)
 
 class Generuj_Atomy():
-    def __init__(self, particles=10):
-        self.particules=list(range(10))
+    def __init__(self, particles=100):
+        self.particules=list(range(particles))
         for ind, p_ in enumerate(self.particules):
             self.particules[ind]=Atom(x=r.randint(0,50),y=r.randint(0,(ramki//2)*50))
             x,y=self.particules[ind].pos
             rad=self.particules[ind].radius
-            canva.create_oval(x-rad,y-rad,x+rad,y+rad)
+            self.particules[ind].config=canva.create_oval(x-rad,y-rad,x+rad,y+rad)
+            canva.itemconfig(self.particules[ind].config ,fill='#%02x%02x%02x' %(
+            r.randint(0,255),r.randint(0,255),r.randint(0,255))
+)
             
 def START():
     canva.delete(red)
@@ -69,20 +74,9 @@ start.place(x=(ramki*55-279)//2, y=40, width=98, height=20)
 generuj=Button(master=frstart,text='Generuj Atomy',command=Generuj)
 generuj.config(state=NORMAL)
 generuj.place(x=1, y=40, width=100, height=20)
-"""
-if generuj.config(state)==DISABLED:
-    particules=list(range(10))
-    for ind, p_ in enumerate(particules):
-        particules[ind]=Atom(x=r.randint(0,50),y=r.randint(0,(ramki//2)*50))
-        x,y=particules[ind].pos
-        rad=particules[ind].radius
-        canva.create_oval(x-rad,y-rad,x+rad,y+rad)
+i=canva.create_oval(2,2,8,8)
+canva.itemconfig(i,fill='#%02x%02x%02x' %(
+            r.randint(0,255),r.randint(0,255),r.randint(0,255))
+)
 
-stop=Button(master=frstart,text='STOP',command=STOP)
-stop.config(state=DISABLED)
-stop.place(x=(ramki*55-79)//2, y=80, width=98, height=20)
-dane=Tk()
-dane.title('Entropia dane wyjściowe')
-dane.geometry('700x500')
-"""
 

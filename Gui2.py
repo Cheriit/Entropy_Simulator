@@ -49,6 +49,7 @@ def START():
 def STOP():
     stop.config(state=DISABLED)
     start.config(state=NORMAL)
+
 okno = Tk()
 ramki=20
 okno.title('Entropia')
@@ -79,4 +80,6 @@ canva.itemconfig(i,fill='#%02x%02x%02x' %(
             r.randint(0,255),r.randint(0,255),r.randint(0,255))
 )
 
-
+while True:
+    okno.update_idletasks()
+    okno.update()

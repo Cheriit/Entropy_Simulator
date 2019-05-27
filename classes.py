@@ -50,10 +50,10 @@ class Container:
             self.atoms[i].move(self.tickrate)
         # canvas.after(self.tickrate , self.tick())
 
-    def atoms_pos(self):
+    def atoms_pos(self, scale=(1, 1)):
         output = []
         for i in range(self.number_of_atoms):
-            output.append(self.atoms[i].pos)
+            output.append((self.atoms[i].pos[0]*scale[0], self.atoms[i].pos[1]*scale[1]))
         return output
 
     def atoms_speed(self):
@@ -62,6 +62,11 @@ class Container:
             output.append(self.atoms[i].speed)
         return output
 
+    def export_pixels(self, h=500, w=500):
+        pixels = self.atoms_pos((h//self.height, w//self.width))
+        for i in range(len(pixels)):
+            pixels[i] = (round(pixels[i][0]), round(pixels[i][1]))
+        return pixels
+
     def __str__(self):
         return f"Pojemnik po rozmiarach {self.width} x {self.height}, zawierający {len(self.atoms)} atomów"
-

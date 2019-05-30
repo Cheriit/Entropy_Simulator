@@ -19,6 +19,8 @@ class Window(Tk):
 
         # self.frame_start = self.generate_frames()
         self.frame_start = Frame(master=self, background='#F3E77F')
+        self.frame_start.pack()
+
         self.frame_start.place(x=1, y=1, width=self.frames_numbers * 51, height=78)
 
         self.container = Container(self, config['Container'], config['Atom'])

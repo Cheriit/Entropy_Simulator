@@ -15,6 +15,9 @@ class Container(Canvas):
         self.config = containerConfig
         self.width = int(self.config['width'])
         self.height = int(self.config['height'])
+        self.frames_number = master.get_frames_number()
+        self.width_container = int(self.config['width'])*self.frames_number
+        self.height_container = int(self.config['height'])*self.frames_number//2
         self.tick_rate = int(self.config['tick_rate'])
         self.number_of_atoms = int(self.config['number_of_atoms'])
         self.radius_error = float(self.config['radius_error'])
@@ -22,28 +25,27 @@ class Container(Canvas):
         self.master = master
         self.tk = master.tk
 
-        self.frames_number = master.get_frames_number()
 
         super().__init__(master, background='#' + self.config['background'])
         # self.canvas = Canvas()
-        self.place(x=1, y=80, width=self.frames_number * 51, height=(self.frames_number // 2) * 50)
+        self.place(x=1, y=80, width=self.frames_number * self.width, height=(self.frames_number // 2) * self.width)
         # self.pack()
         self.draw_gui()
         self.atoms = np.empty(0)
 
     def draw_gui(self):
         for i in range(1, self.frames_number):
-            self.create_line(i * 51, 0, i * 51, (self.frames_number // 2) * 51, fill='#D9CCFF')
+            self.create_line(i * self.width, 0, i * self.width, (self.frames_number // 2) * self.width, fill='#D9CCFF')
 
         for i in range(1, self.frames_number):
-            self.create_line(0, i * 51, self.frames_number * 51, i * 51, fill='#D9CCFF')
+            self.create_line(0, i * self.width, self.frames_number * self.width, i * self.width, fill='#D9CCFF')
 
     def generate_atoms(self):
         atoms = []
         for i in range(self.number_of_atoms):
             atoms.append(
-                Atom(self, r.randint(int(self.atomsConfig['radius']), 51 - int(self.atomsConfig['radius'])),
-                     r.randint(int(self.atomsConfig['radius']), (self.frames_number // 2) * 51) - int(
+                Atom(self, r.randint(int(self.atomsConfig['radius']), self.width - int(self.atomsConfig['radius'])),
+                     r.randint(int(self.atomsConfig['radius']), (self.frames_number // 2) * self.width) - int(
                          self.atomsConfig['radius']),
                      r.uniform(int(self.config['min_speed']), int(self.config['max_speed'])),
                      r.uniform(int(self.config['min_speed']), int(self.config['max_speed'])),
@@ -51,7 +53,7 @@ class Container(Canvas):
                      self.atomsConfig)
                 )
         self.atoms = np.asarray(atoms)
-        self.red = self.create_line(51, 0, 51, (self.frames_number // 2) * 51, fill="red")
+        self.red = self.create_line(self.width, 0, self.width, (self.frames_number // 2) * self.width, fill="red")
 
     def delete_atoms(self):
         # print(str(self.atoms.shape))
@@ -67,10 +69,11 @@ class Container(Canvas):
         radius = int(self.atomsConfig['radius'])
         error = self.radius_error
         for i in self.atoms:
-            for j in self.atoms:
-                if i.distance(j)<=radius-error:
-                    i.apply_collision(j)
-                    break
+            # for j in self.atoms:
+            #     if i.distance(j) <= 2*radius-error:
+            #         i.is_collision(j)
+            #         break
+            i.is_wall()
 
 
 

@@ -1,0 +1,67 @@
+
+    def is_wall(self):
+        max_x = self.config['width']
+        max_y = self.config['height']
+        if (self.pos[0] <= 0.101):
+            if (self.pos[1] <= 0.101) or ((self.pos[1] <= max_y) and (max_y - 0.101 <= self.pos[1])):
+                self.speed = (-self.speed[0], -self.speed[1])
+            else:
+                self.speed = (-self.speed[0], self.speed[1])
+        elif (max_x - 0.101 <= self.pos[0]) and (self.pos[0] <= max_x):
+            if (self.pos[1] <= 0.101) or ((self.pos[1] <= max_y) and (max_y - 0.101 <= self.pos[1])):
+                self.speed = (-self.speed[0], -self.speed[1])
+            else:
+                self.speed = (-self.speed[0], self.speed[1])
+        elif (self.pos[1] <= 0.101):
+            self.speed = (self.speed[0], -self.speed[1])
+        elif (max_y - 0.101 <= self.pos[1]) and (self.pos[1] <= max_y):
+            self.speed = (self.speed[0], -self.speed[1])
+
+    def is_collision(self, punkt_2):
+        if (math.sqrt((self.pos[0] - punkt_2.pos[0]) ^ 2 + (self.pos[1] - punkt_2.pos[1]) ^ 2) <= 0.101):
+            if (self.pos[1] == punkt_2.pos[1]):
+                self.pos[0], punkt_2.pos[0] = punkt_2.pos[0], self.pos[0]
+            elif (self.pos[0] == punkt_2.pos[0]):
+                self.pos[1], punkt_2.pos[1] = punkt_2.pos[1], self.pos[1]
+            else:
+                punkt_Hx = 0.5 * ((punkt_2.pos[0] - self.pos[0]) / (self.pos[1] - punkt_2.pos[1])) * (
+                            self.pos[1] - punkt_2.pos[1] - punkt_2.speed[1] + (punkt_2.pos[0] + punkt_2.speed[0]) * (
+                                (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0])) - self.pos[0] * (
+                                        (punkt_2.pos[1] - self.pos[1]) / (punkt_2.pos[0] - self.pos[0])))
+                punkt_Hy = 0.5 * (self.pos[1] - punkt_2.pos[1] - punkt_2.speed[1] + (punkt_2.pos[0] + punkt_2.speed[0]) * (
+                            (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0])) - self.pos[0] * (
+                                              (punkt_2.pos[1] - self.pos[1]) / (
+                                                  punkt_2.pos[0] - self.pos[0]))) + punkt_2.pos[1] + punkt_2.speed[1] - (
+                                       punkt_2.pos[0] + punkt_2.speed[0]) * ((self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0]))
+                punkt_1_Vx = math.sqrt((0.5 * ((punkt_2.pos[0] - self.pos[0]) / (self.pos[1] - punkt_2.pos[1])) * (
+                            punkt_2.pos[1] + punkt_2.speed[1] - (self.pos[0] + self.speed[0]) * (
+                                (punkt_2.pos[1] - self.pos[1]) / (punkt_2.pos[0] - self.pos[0])) + (
+                                        self.pos[0] - punkt_2.pos[0] + punkt_Hx) * (
+                                        (punkt_2.pos[1] - self.pos[1]) / (punkt_2.pos[0] - self.pos[0])) - punkt_Hy) - self.pos[0]) ^ 2)
+                punkt_1_Vy = math.sqrt((0.5 * (punkt_2.pos[1] + punkt_2.speed[1] - (self.pos[0] + self.speed[0]) * (
+                            (punkt_2.pos[1] - self.pos[1]) / (punkt_2.pos[0] - self.pos[0])) + (self.pos[0] - punkt_2.pos[0] + punkt_Hx) * (
+                                                       (punkt_2.pos[1] - self.pos[1]) / (
+                                                           punkt_2.pos[0] - self.pos[0])) - punkt_Hy) + punkt_Hy - punkt_2.pos[1] + self.pos[1] - (
+                                                punkt_Hx - punkt_2.pos[0] + self.pos[0]) * (
+                                                (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0]))) ^ 2)
+                punkt_Fx = 0.5 * ((punkt_2.pos[0] - self.pos[1]) / (punkt_2.pos[1] - self.pos[1])) * (
+                            self.speed[1] - (self.pos[0] + self.speed[0]) * (
+                                (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0])) + self.pos[0] * (
+                                        (punkt_2.pos[1] - self.pos[1]) / (punkt_2.pos[0] - self.pos[0])))
+                punkt_Fy = 0.5 * (self.speed[1] - (self.pos[0] + self.speed[0]) * (
+                            (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0])) + self.pos[0] * (
+                                              (punkt_2.pos[1] - self.pos[1]) / (
+                                                  punkt_2.pos[0] - self.pos[0]))) + self.pos[1] - self.pos[0] * (
+                                       (punkt_2.pos[1] - self.pos[1]) / (punkt_2.pos[0] - self.pos[0]))
+                punkt_2_Vx = math.sqrt((0.5 * ((punkt_2.pos[0] - self.pos[0]) / (self.pos[1] - punkt_2.pos[1])) * (
+                            punkt_2.speed[1] + self.pos[1] - punkt_Fy + (punkt_Fx - self.pos[0] + punkt_2.pos[0]) * (
+                                (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0])) - (punkt_2.pos[0] + punkt_2.speed[0]) * (
+                                        (punkt_2.pos[1] - self.pos[1]) / (punkt_2.pos[0] - self.pos[0]))) - punkt_2.pos[0]) ^ 2)
+                punkt_2_Vy = math.sqrt((0.5 * (punkt_2.speed[1] + self.pos[1] - punkt_Fy + (punkt_Fx - self.pos[0] + punkt_2.pos[0]) * (
+                            (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0])) - (punkt_2.pos[0] + punkt_2.speed[0]) * (
+                                                       (punkt_2.pos[1] - self.pos[1]) / (
+                                                           punkt_2.pos[0] - self.pos[0]))) + punkt_Fy - self.pos[1] + punkt_2.pos[1] - (
+                                                punkt_Fx - self.pos[0] + punkt_2.pos[0]) * (
+                                                (self.pos[1] - punkt_2.pos[1]) / (punkt_2.pos[0] - self.pos[0])) - punkt_2.pos[1]) ^ 2)
+                self.speed = (punkt_1_Vx, punkt_1_Vy)
+                punkt_2.speed = (punkt_2_Vx, punkt_2_Vy)

@@ -49,28 +49,24 @@ class Atom:
         max_x = self.master.width_container-self.radius
         max_y = self.master.height_container-self.radius
 
-        if self.pos[0] < self.radius or self.pos[0] > max_x:
+        # if self.pos[0] < self.radius or self.pos[0] > max_x:
+        #     self.speed = (-self.speed[0], self.speed[1])
+        #
+        # if self.pos[1] < 0 or self.pos[1] > max_y:
+        #     self.speed = (self.speed[0], -self.speed[1])
+
+        if self.pos[0] < self.radius:
             self.speed = (-self.speed[0], self.speed[1])
-
-        if self.pos[1] < 0 or self.pos[1] > max_y:
+            self.pos = (self.radius, self.pos[1])
+        elif self.pos[0] > max_x:
+            self.speed = (-self.speed[0], self.speed[1])
+            self.pos = (max_x, self.pos[1])
+        elif self.pos[1] < 0:
             self.speed = (self.speed[0], -self.speed[1])
-
-        # if self.pos[0] < self.radius:
-        #     self.speed[0] *= -1
-        #     # self.pos[0] = self.radius
-        #
-        # elif self.pos[0] > max_x:
-        #     self.speed[0] *= -1
-        #     # self.pos[0] = max_x
-        #
-        #
-        # if self.pos[1] < 0:
-        #     self.speed[1] *= -1
-        #     # self.pos[1] = 0
-        #
-        # elif self.pos[1] > max_y:
-        #     self.speed[1] *= -1
-        #     # self.pos[1] = max_y
+            self.pos = (self.pos[0], 0)
+        elif self.pos[1] > max_y:
+            self.speed = (self.speed[0], -self.speed[1])
+            self.pos = (self.pos[0], max_y)
 
     def distance(self, point):
         return math.sqrt((self.pos[0] - point.pos[0]) ** 2 + (self.pos[1] - point.pos[1]) ** 2)

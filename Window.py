@@ -34,12 +34,13 @@ class Window(Tk):
         self.button_generate = self.generate_button(self.frame_start, 'Generuj Atomy', self.generate_atoms, NORMAL,
                                                     1, 40, 100, 20)
 
-        self.button_start = self.generate_button(self.frame_start, 'START', self.START, DISABLED,
-                                                 (self.frames_numbers * 55 - 279) // 2, 40, 98, 20)
-
         self.button_stop = self.generate_button(self.frame_start, 'STOP', self.STOP, DISABLED,
                                                 (self.frames_numbers * 55 - 79) // 2,
-                                                80, 100, 20)
+                                                40, 100, 20)
+
+        self.button_start = self.generate_button(self.frame_start, 'START', self.START, DISABLED,
+                                                 (self.frames_numbers * 55 - 279) // 2,
+                                                 40, 98, 20)
 
     def generate_button(self, master, text, command, state, x, y, width, height):
         button = Button(master=master, text=text, command=command)
@@ -57,10 +58,9 @@ class Window(Tk):
     def START(self):
         self.container.delete(self.container.red)
         self.container.tick()
-
         self.button_start.config(state=DISABLED)
         self.button_stop.config(state=NORMAL)
-        self.button_generate.config(state=NORMAL)
+        self.button_generate.config(state=DISABLED)
 
     def STOP(self):
         self.after_cancel(self.container._after)

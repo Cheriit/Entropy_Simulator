@@ -84,7 +84,6 @@ class Container(Canvas):
                 atom2 = self.atoms[j]
                 if atom1.distance(atom2) <= 2*radius-error:
                     atom1.is_collision(atom2)
-                    break
             atom1.is_wall()
 
 

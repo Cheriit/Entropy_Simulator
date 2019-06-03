@@ -79,7 +79,7 @@ class Atom:
         """
         Ta funkcja działą mniejwięcej ale bardziej mniej niż więcej, dobra na teraz, wera pisze nową
         :param point:
-        :return: 
+        :return:
         """
         if abs(self.pos[0]) <= abs(point.pos[0] + int(self.config['radius']) * 2) or \
                 abs(self.pos[0]) <= abs(point.pos[0] - int(self.config['radius']) * 2):

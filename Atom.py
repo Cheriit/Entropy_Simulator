@@ -76,27 +76,20 @@ class Atom:
         return math.sqrt((self.pos[0] - point.pos[0]) ** 2 + (self.pos[1] - point.pos[1]) ** 2)
 
     def is_collision(self, point):
-        """
-        Ta funkcja działą mniejwięcej ale bardziej mniej niż więcej, dobra na teraz, wera pisze nową
-        :param point:
-        :return:
-        """
-        if abs(self.pos[0]) <= abs(point.pos[0] + int(self.config['radius']) * 2) or \
-                abs(self.pos[0]) <= abs(point.pos[0] - int(self.config['radius']) * 2):
-            temp = self.speed[1]
+        if(self.pos[0] <= point.pos[0] + int(self.config['radius']) * 2 or self.pos[0] <= point.pos[0] - int(self.config['radius']) * 2):
+            tmp = self.speed[1]
             self.speed = (self.speed[0], point.speed[1])
-            point.speed = (point.speed[0], temp)
-
-        elif abs(self.pos[1]) <= abs(point.pos[1] + int(self.config['radius']) * 2) or \
-                abs(self.pos[1]) <= abs(point.pos[1] - int(self.config['radius']) * 2):
-            temp = self.speed[0]
+            point.speed = (point.speed[0], tmp)
+        if(self.pos[1] <= point.pos[1] + int(self.config['radius']) * 2 or self.pos[1] <= point.pos[1] - int(self.config['radius']) * 2):
+            tmp = self.speed[0]
             self.speed = (point.speed[0], self.speed[1])
-            point.speed = (temp, point.speed[1])
-
-        """else:
-            point_1_vx = 0.5 * (self.speed[1] - point.speed[1]) * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) + 0.5 * (self.speed[0] + point.speed[0])
-            point_1_vy = 0.75 * ((self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) * (self.speed[0] - point.speed[0]) + 0.5 * self.speed[1]
-            point_2_vx = 0.5 * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) * (point.speed[1] - self.speed[1]) + 0.5 * point.speed[0]
-            point_2_vy = 0.5 * ((self.pos[1] - point.pos[1])/(point.pos[0] - self.pos[0])) * (point.speed[0] - self.speed[0]) - self.pos[1] + 0.5 * (self.speed[1] + point.speed[1])
+            point.speed = (tmp, point.speed[1])
+        else:
+            tg = math.atan((point.pos[0] - self.pos[0])/(self.pos[1] - point.pos[1]))
+            tg_2 = math.atan((self.pos[1] - point.pos[1])/(point.pos[0] - self.pos[0]))
+            point_1_vx = 0.5 * (self.speed[1] - point.speed[1]) * tg + 0.5 * (self.speed[0] + point.speed[0])
+            point_1_vy = 0.75 * tg_2 * (self.speed[0] - point.speed[0]) + 0.5 * self.speed[1]
+            point_2_vx = 0.5 * tg * (point.speed[1] - self.speed[1]) + 0.5 * point.speed[0]
+            point_2_vy = 0.5 * tg_2 * (point.speed[0] - self.speed[0]) - self.pos[1] + 0.5 * (self.speed[1] + point.speed[1])
             self.speed = (point_1_vx, point_1_vy)
-            point.speed = (point_2_vx, point_2_vy)"""
+            point.speed = (point_2_vx, point_2_vy)

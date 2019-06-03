@@ -65,16 +65,27 @@ class Container(Canvas):
             np.delete(self.atoms, 0)
         # self.master.after_cancel(self.tick)
 
-    def serve_colisions(self):
+    """def serve_colisions(self):
         radius = int(self.atomsConfig['radius'])
         error = self.radius_error
         for i in self.atoms:
-            # for j in self.atoms:
-            #     if i.distance(j) <= 2*radius-error:
-            #         i.is_collision(j)
-            #         break
-            i.is_wall()
+            for j in self.atoms:
+                if i.distance(j) <= 2*radius-error:
+                    i.is_collision(j)
+                    break
+            i.is_wall()"""
 
+    def serve_colisions(self):
+        radius = int(self.atomsConfig['radius'])
+        error = self.radius_error
+        for i in range(self.number_of_atoms):
+            atom1 = self.atoms[i]
+            for j in range(i+1, self.number_of_atoms):
+                atom2 = self.atoms[j]
+                if atom1.distance(atom2) <= 2*radius-error:
+                    atom1.is_collision(atom2)
+                    break
+            atom1.is_wall()
 
 
     def tick(self):

@@ -50,10 +50,10 @@ class Atom:
         max_y = self.master.height_container-self.radius
 
         if self.pos[0] < self.radius or self.pos[0] > max_x:
-            self.speed[0] *= -1
+            self.speed = (-self.speed[0], self.speed[1])
 
         if self.pos[1] < 0 or self.pos[1] > max_y:
-            self.speed[1] *= -1
+            self.speed = (self.speed[0], -self.speed[1])
 
         # if self.pos[0] < self.radius:
         #     self.speed[0] *= -1
@@ -76,65 +76,27 @@ class Atom:
         return math.sqrt((self.pos[0] - point.pos[0]) ** 2 + (self.pos[1] - point.pos[1]) ** 2)
 
     def is_collision(self, point):
+        """
+        Ta funkcja działą mniejwięcej ale bardziej mniej niż więcej, dobra na teraz, wera pisze nową
+        :param point:
+        :return: 
+        """
+        if abs(self.pos[0]) <= abs(point.pos[0] + int(self.config['radius']) * 2) or \
+                abs(self.pos[0]) <= abs(point.pos[0] - int(self.config['radius']) * 2):
+            temp = self.speed[1]
+            self.speed = (self.speed[0], point.speed[1])
+            point.speed = (point.speed[0], temp)
 
-        if self.pos[1] == point.pos[1]:
-            tmp = point.pos[0]
-            self.pos[0], point.pos[0] = point.pos[0], self.pos[0]
+        elif abs(self.pos[1]) <= abs(point.pos[1] + int(self.config['radius']) * 2) or \
+                abs(self.pos[1]) <= abs(point.pos[1] - int(self.config['radius']) * 2):
+            temp = self.speed[0]
+            self.speed = (point.speed[0], self.speed[1])
+            point.speed = (temp, point.speed[1])
 
-        elif self.pos[0] == point.pos[0]:
-            self.pos[1], point.pos[1] = point.pos[1], self.pos[1]
-
-        else:
-            punkt_Hx = 0.5 * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) * (
-                    self.pos[1] - point.pos[1] - point.speed[1] + (point.pos[0] + point.speed[0]) * (
-                    (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) - self.pos[0] * (
-                            (point.pos[1] - self.pos[1]) / (point.pos[0] - self.pos[0])))
-
-            punkt_Hy = 0.5 * (self.pos[1] - point.pos[1] - point.speed[1] + (point.pos[0] + point.speed[0]) * (
-                    (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) - self.pos[0] * (
-                                      (point.pos[1] - self.pos[1]) / (
-                                      point.pos[0] - self.pos[0]))) + point.pos[1] + point.speed[1] - (
-                               point.pos[0] + point.speed[0]) * (
-                               (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0]))
-            punkt_1_Vx = math.sqrt((0.5 * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) * (
-                    point.pos[1] + point.speed[1] - (self.pos[0] + self.speed[0]) * (
-                    (point.pos[1] - self.pos[1]) / (point.pos[0] - self.pos[0])) + (
-                            self.pos[0] - point.pos[0] + punkt_Hx) * (
-                            (point.pos[1] - self.pos[1]) / (point.pos[0] - self.pos[0])) - punkt_Hy) - self.pos[0]) ** 2)
-
-            punkt_1_Vy = math.sqrt((0.5 * (point.pos[1] + point.speed[1] - (self.pos[0] + self.speed[0]) * (
-                    (point.pos[1] - self.pos[1]) / (point.pos[0] - self.pos[0])) + (
-                                                   self.pos[0] - point.pos[0] + punkt_Hx) * (
-                                                   (point.pos[1] - self.pos[1]) / (
-                                                   point.pos[0] - self.pos[0])) - punkt_Hy) + punkt_Hy - point.pos[1] +
-                                    self.pos[1] - (
-                                            punkt_Hx - point.pos[0] + self.pos[0]) * (
-                                            (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0]))) ** 2)
-
-            punkt_Fx = 0.5 * ((point.pos[0] - self.pos[1]) / (point.pos[1] - self.pos[1])) * (
-                    self.speed[1] - (self.pos[0] + self.speed[0]) * (
-                    (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) + self.pos[0] * (
-                            (point.pos[1] - self.pos[1]) / (point.pos[0] - self.pos[0])))
-
-            punkt_Fy = 0.5 * (self.speed[1] - (self.pos[0] + self.speed[0]) * (
-                    (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) + self.pos[0] * (
-                                      (point.pos[1] - self.pos[1]) / (
-                                      point.pos[0] - self.pos[0]))) + self.pos[1] - self.pos[0] * (
-                               (point.pos[1] - self.pos[1]) / (point.pos[0] - self.pos[0]))
-
-            punkt_2_Vx = math.sqrt((0.5 * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) * (
-                    point.speed[1] + self.pos[1] - punkt_Fy + (punkt_Fx - self.pos[0] + point.pos[0]) * (
-                    (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) - (point.pos[0] + point.speed[0]) * (
-                            (point.pos[1] - self.pos[1]) / (point.pos[0] - self.pos[0]))) - point.pos[0]) ** 2)
-
-            punkt_2_Vy = math.sqrt(
-                (0.5 * (point.speed[1] + self.pos[1] - punkt_Fy + (punkt_Fx - self.pos[0] + point.pos[0]) * (
-                        (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) - (
-                                point.pos[0] + point.speed[0]) * (
-                                (point.pos[1] - self.pos[1]) / (
-                                point.pos[0] - self.pos[0]))) + punkt_Fy - self.pos[1] + point.pos[1] - (
-                         punkt_Fx - self.pos[0] + point.pos[0]) * (
-                         (self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) - point.pos[1]) ** 2)
-
-            self.speed = (punkt_1_Vx, punkt_1_Vy)
-            point.speed = (punkt_2_Vx, punkt_2_Vy)
+        """else:
+            point_1_vx = 0.5 * (self.speed[1] - point.speed[1]) * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) + 0.5 * (self.speed[0] + point.speed[0])
+            point_1_vy = 0.75 * ((self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) * (self.speed[0] - point.speed[0]) + 0.5 * self.speed[1]
+            point_2_vx = 0.5 * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) * (point.speed[1] - self.speed[1]) + 0.5 * point.speed[0]
+            point_2_vy = 0.5 * ((self.pos[1] - point.pos[1])/(point.pos[0] - self.pos[0])) * (point.speed[0] - self.speed[0]) - self.pos[1] + 0.5 * (self.speed[1] + point.speed[1])
+            self.speed = (point_1_vx, point_1_vy)
+            point.speed = (point_2_vx, point_2_vy)"""

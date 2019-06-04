@@ -23,31 +23,24 @@ class Atom:
             f"Pozycja: {self.pos}\n" \
             f"Prędkość: {self.speed}\n"
 
-    def access_atom(self):
-        return self.pos[0], self.pos[1], \
-               self.speed[0], self.speed[1]
-
-    def distance(self, atom):
-        return 100
-        pass
-
-    def apply_collision(self, atom):
-        pass
-
     def move(self):
         # print(self.name)
+        tick = (1 / self.master.tick_rate)
         self.pos = [
-            self.pos[0] + self.speed[0] * (1 / self.master.tick_rate),
-            self.pos[1] + self.speed[1] * (1 / self.master.tick_rate)
+            self.pos[0] + self.speed[0] * tick,
+            self.pos[1] + self.speed[1] * tick
         ]
         self.master.move(self.point,
-                         self.speed[0] * (1 / self.master.tick_rate),
-                         self.speed[1] * (1 / self.master.tick_rate))
+                         self.speed[0] * tick,
+                         self.speed[1] * tick)
 
     def is_wall(self):
 
         max_x = self.master.width_container-self.radius
         max_y = self.master.height_container-self.radius
+        pos = self.pos
+        speed = self.speed
+        radius = self.radius
 
         # if self.pos[0] < self.radius or self.pos[0] > max_x:
         #     self.speed = (-self.speed[0], self.speed[1])
@@ -55,18 +48,18 @@ class Atom:
         # if self.pos[1] < 0 or self.pos[1] > max_y:
         #     self.speed = (self.speed[0], -self.speed[1])
 
-        if self.pos[0] < self.radius:
-            self.speed = (-self.speed[0], self.speed[1])
-            self.pos = (self.radius, self.pos[1])
-        elif self.pos[0] > max_x:
-            self.speed = (-self.speed[0], self.speed[1])
-            self.pos = (max_x, self.pos[1])
-        elif self.pos[1] < 0:
-            self.speed = (self.speed[0], -self.speed[1])
-            self.pos = (self.pos[0], 0)
-        elif self.pos[1] > max_y:
-            self.speed = (self.speed[0], -self.speed[1])
-            self.pos = (self.pos[0], max_y)
+        if pos[0] < radius:
+            self.speed = (-speed[0], speed[1])
+            self.pos = (radius, pos[1])
+        elif pos[0] > max_x:
+            self.speed = (-speed[0], speed[1])
+            self.pos = (max_x, pos[1])
+        elif pos[1] < 0:
+            self.speed = (speed[0], -speed[1])
+            self.pos = (pos[0], 0)
+        elif pos[1] > max_y:
+            self.speed = (speed[0], -speed[1])
+            self.pos = (pos[0], max_y)
 
     def distance(self, point):
         return math.sqrt((self.pos[0] - point.pos[0]) ** 2 + (self.pos[1] - point.pos[1]) ** 2)
@@ -77,14 +70,17 @@ class Atom:
         :param point:
         :return:
         """
-        if abs(self.pos[0]) <= abs(point.pos[0] + int(self.config['radius']) * 2) or \
-                abs(self.pos[0]) <= abs(point.pos[0] - int(self.config['radius']) * 2):
+        pos_source = self.pos
+        pos_target = point.pos
+        radius = self.radius *2
+
+        if abs(self.pos[0]) <= abs(point.pos[0] + radius ) or \
+                abs(self.pos[0]) <= abs(point.pos[0] - radius):
             temp = self.speed[1]
             self.speed = (self.speed[0], point.speed[1])
             point.speed = (point.speed[0], temp)
 
-        elif abs(self.pos[1]) <= abs(point.pos[1] + int(self.config['radius']) * 2) or \
-                abs(self.pos[1]) <= abs(point.pos[1] - int(self.config['radius']) * 2):
+        else:
             temp = self.speed[0]
             self.speed = (point.speed[0], self.speed[1])
             point.speed = (temp, point.speed[1])

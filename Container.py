@@ -65,16 +65,6 @@ class Container(Canvas):
             np.delete(self.atoms, 0)
         # self.master.after_cancel(self.tick)
 
-    """def serve_colisions(self):
-        radius = int(self.atomsConfig['radius'])
-        error = self.radius_error
-        for i in self.atoms:
-            for j in self.atoms:
-                if i.distance(j) <= 2*radius-error:
-                    i.is_collision(j)
-                    break
-            i.is_wall()"""
-
     def serve_colisions(self):
         radius = int(self.atomsConfig['radius'])
         error = self.radius_error
@@ -91,7 +81,9 @@ class Container(Canvas):
         self.serve_colisions()
         for i in range(len(self.atoms)):
             self.atoms[i].move()
+        # print(str(self.generate_counted_atoms_list()))
         self._after = self.master.after(self.tick_rate, self.tick)
+
 
     def atoms_pos(self, scale=(1, 1)):
         output = []
@@ -111,5 +103,11 @@ class Container(Canvas):
             pixels[i] = (round(pixels[i][0]), round(pixels[i][1]))
         return pixels
 
+    def generate_counted_atoms_list(self):
+        counted_atoms = np.zeros(self.frames_number)
+        width = self.width
+        for i in self.atoms:
+            counted_atoms[int(i.pos[0]//width)] += 1
+        return counted_atoms
     def __str__(self):
         return f"Pojemnik po rozmiarach {self.width} x {self.height}, zawierający {len(self.atoms)} atomów"

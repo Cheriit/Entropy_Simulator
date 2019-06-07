@@ -1,6 +1,7 @@
 import random as r
 from tkinter import *
 import numpy as np
+import math
 
 from Atom import Atom
 
@@ -102,6 +103,15 @@ class Container(Canvas):
         for i in range(len(pixels)):
             pixels[i] = (round(pixels[i][0]), round(pixels[i][1]))
         return pixels
+
+    #zwraca tuplę z zawartością: (prawdopodobienstwo_termodynamiczne,entropia)
+    def thermo_prob_and_entropy(self):
+        x=math.factorial(self.number_of_atoms)
+        y=1
+        for i in range(len(self.generate_counted_atoms_list())):
+            y*=(math.factorial(self.generate_counted_atoms_list()[i]))
+
+        return (x/y,math.log(x/y))
 
     def generate_counted_atoms_list(self):
         counted_atoms = np.zeros(self.frames_number)

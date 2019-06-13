@@ -70,20 +70,52 @@ class Atom:
         :param point:
         :return:
         """
-        pos_source = self.pos
-        pos_target = point.pos
-        radius = self.radius *2
+        # pos_source = self.pos
+        # pos_target = point.pos
+        # radius = self.radius *2
+        #
+        # if abs(self.pos[0]) <= abs(point.pos[0] + radius ) or \
+        #         abs(self.pos[0]) <= abs(point.pos[0] - radius):
+        #     temp = self.speed[1]
+        #     self.speed = (self.speed[0], point.speed[1])
+        #     point.speed = (point.speed[0], temp)
+        #
+        # else:
+        #     temp = self.speed[0]
+        #     self.speed = (point.speed[0], self.speed[1])
+        #     point.speed = (temp, point.speed[1])
+        radius = self.radius * 2
+        if self.distance(point) < radius / 2:
+            if self.pos[0] < point.pos[0]:
+                point_1_x = self.pos[0] - radius / 4
+                point_2_x = point.pos[0] + radius / 4
+            else:
+                point_1_x = self.pos[0] + radius / 4
+                point_2_x = point.pos[0] - radius / 4
+            if self.pos[1] < point.pos[1]:
+                point_1_y = self.pos[1] - radius / 4
+                point_2_y = point.pos[1] + radius / 4
+            else:
+                point_1_y = self.pos[1] + radius / 4
+                point_2_y = point.pos[1] - radius / 4
+            self.pos = (point_1_x, point_1_y)
+            point.pos = (point_2_x, point_2_y)
 
-        if abs(self.pos[0]) <= abs(point.pos[0] + radius ) or \
-                abs(self.pos[0]) <= abs(point.pos[0] - radius):
-            temp = self.speed[1]
-            self.speed = (self.speed[0], point.speed[1])
-            point.speed = (point.speed[0], temp)
-
-        else:
-            temp = self.speed[0]
-            self.speed = (point.speed[0], self.speed[1])
-            point.speed = (temp, point.speed[1])
+        alpha_1 = math.atan2(self.speed[1], self.speed[0])
+        alpha_2 = math.atan2(point.speed[1], point.speed[0])
+        phi = math.atan2(self.pos[1] - point.pos[1], self.pos[0] - point.pos[0])
+        point_1_v = math.sqrt(self.speed[0] ** 2 + self.speed[1] ** 2)
+        point_2_v = math.sqrt(point.speed[0] ** 2 + point.speed[1] ** 2)
+        point_1_vx = point_2_v * math.cos(alpha_2 - phi) * math.cos(phi) + point_1_v * math.sin(
+            alpha_1 - phi) * math.cos(phi + math.pi / 2)
+        point_1_vy = point_2_v * math.cos(alpha_2 - phi) * math.sin(phi) + point_1_v * math.sin(
+            alpha_1 - phi) * math.sin(phi + math.pi / 2)
+        point_2_vx = point_1_v * math.cos(alpha_1 - phi) * math.cos(phi) + point_2_v * math.sin(
+            alpha_2 - phi) * math.cos(phi + math.pi / 2)
+        point_2_vy = point_1_v * math.cos(alpha_1 - phi) * math.sin(phi) + point_2_v * math.sin(
+            alpha_2 - phi) * math.sin(phi + math.pi / 2)
+        self.speed = (point_1_vx, point_1_vy)
+        point.speed = (point_2_vx, point_2_vy)
 
         """else:
             point_1_vx = 0.5 * (self.speed[1] - point.speed[1]) * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) + 0.5 * (self.speed[0] + point.speed[0])

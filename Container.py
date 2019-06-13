@@ -25,6 +25,8 @@ class Container(Canvas):
         self.atomsConfig = atomConfig
         self.master = master
         self.tk = master.tk
+        self.x = [0]
+        self.y = [0]
 
 
         super().__init__(master, background='#' + self.config['background'])
@@ -64,6 +66,12 @@ class Container(Canvas):
                 self.delete(atom.point)
                 del atom
             np.delete(self.atoms, 0)
+        self.x=[0]
+        self.y=[0]
+        chart = self.master.chart
+        chart.plt.clf()
+        chart.plt.add_subplot(111).plot(self.x,self.y)
+        chart.canvas.draw()
         # self.master.after_cancel(self.tick)
 
     def serve_colisions(self):
@@ -77,12 +85,19 @@ class Container(Canvas):
                     atom1.is_collision(atom2)
             atom1.is_wall()
 
+    def replot(self):
+        chart = self.master.chart
+        self.x.append(self.x[-1]+1)
+        self.y.append(self.entropy()[1])
+        chart.plt.add_subplot(111).plot(self.x,self.y)
+        chart.canvas.draw()
 
     def tick(self):
         self.serve_colisions()
         for i in range(len(self.atoms)):
             self.atoms[i].move()
         # print(str(self.generate_counted_atoms_list()))
+        self.replot()
         self._after = self.master.after(self.tick_rate, self.tick)
 
 
@@ -105,11 +120,12 @@ class Container(Canvas):
         return pixels
 
     #zwraca tuplę z zawartością: (prawdopodobienstwo_termodynamiczne,entropia)
-    def thermo_prob_and_entropy(self):
+    def entropy(self):
         x=math.factorial(self.number_of_atoms)
         y=1
-        for i in range(len(self.generate_counted_atoms_list())):
-            y*=(math.factorial(self.generate_counted_atoms_list()[i]))
+        counted_atoms = self.generate_counted_atoms_list()
+        for i in range(len(counted_atoms)):
+            y*=(math.factorial(counted_atoms[i]))
 
         return (x/y,math.log(x/y))
 

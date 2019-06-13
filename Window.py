@@ -1,6 +1,11 @@
 from tkinter import *
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 from Container import Container
+from chart import chart
 
 
 class Window(Tk):
@@ -14,18 +19,23 @@ class Window(Tk):
         self.title('Entropia')
 
         self.geometry(
-            str(self.frames_numbers * 55 - 79) + 'x' + str((self.frames_numbers // 2) * 55 + 80)
+            str(self.frames_numbers * 55 +500) + 'x' + str((self.frames_numbers // 2) * 55 + 60)
         )
 
         # self.frame_start = self.generate_frames()
         self.frame_start = Frame(master=self, background='#F3E77F')
-        self.frame_start.pack()
+        self.frame_start.pack(side=LEFT,fill=Y)
 
-        self.frame_start.place(x=1, y=1, width=self.frames_numbers * 51, height=78)
+        self.frame_start.place(x=1, y=1, width=self.frames_numbers * 51 , height=78)
 
         self.container = Container(self, config['Container'], config['Atom'])
 
+
         self.generate_buttons()
+
+        self.chart = chart(self)
+        self.chart.place( y=80, x=self.frames_numbers * 51 ,width=600, height=400)
+        self.chart.pack(side=RIGHT,fill=Y)
 
     def get_frames_number(self):
         return self.frames_numbers

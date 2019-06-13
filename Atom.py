@@ -84,22 +84,22 @@ class Atom:
         #     temp = self.speed[0]
         #     self.speed = (point.speed[0], self.speed[1])
         #     point.speed = (temp, point.speed[1])
-        radius = self.radius * 2
-        if self.distance(point) < radius / 2:
-            if self.pos[0] < point.pos[0]:
-                point_1_x = self.pos[0] - radius / 4
-                point_2_x = point.pos[0] + radius / 4
-            else:
-                point_1_x = self.pos[0] + radius / 4
-                point_2_x = point.pos[0] - radius / 4
-            if self.pos[1] < point.pos[1]:
-                point_1_y = self.pos[1] - radius / 4
-                point_2_y = point.pos[1] + radius / 4
-            else:
-                point_1_y = self.pos[1] + radius / 4
-                point_2_y = point.pos[1] - radius / 4
-            self.pos = (point_1_x, point_1_y)
-            point.pos = (point_2_x, point_2_y)
+        # radius = self.radius * 2
+        # if self.distance(point) < radius / 2:
+        #     if self.pos[0] < point.pos[0]:
+        #         point_1_x = self.pos[0] - radius / 4
+        #         point_2_x = point.pos[0] + radius / 4
+        #     else:
+        #         point_1_x = self.pos[0] + radius / 4
+        #         point_2_x = point.pos[0] - radius / 4
+        #     if self.pos[1] < point.pos[1]:
+        #         point_1_y = self.pos[1] - radius / 4
+        #         point_2_y = point.pos[1] + radius / 4
+        #     else:
+        #         point_1_y = self.pos[1] + radius / 4
+        #         point_2_y = point.pos[1] - radius / 4
+        #     self.pos = (point_1_x, point_1_y)
+        #     point.pos = (point_2_x, point_2_y)
 
         alpha_1 = math.atan2(self.speed[1], self.speed[0])
         alpha_2 = math.atan2(point.speed[1], point.speed[0])

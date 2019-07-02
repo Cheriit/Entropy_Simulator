@@ -26,8 +26,9 @@ class Container(Canvas):
         self.master = master
         self.tk = master.tk
         self.x = [0]
-        self.y = [0]
-
+        self.y = [0.0]
+        self._after = None
+        self.red = None
 
         super().__init__(master, background='#' + self.config['background'])
         # self.canvas = Canvas()
@@ -89,7 +90,7 @@ class Container(Canvas):
         chart = self.master.chart
         self.x.append(self.x[-1]+1)
         self.y.append(self.entropy()[1])
-        chart.plt.add_subplot(111).plot(self.x,self.y)
+        chart.plt.add_subplot(111).plot(self.x, self.y, color='red')
         chart.canvas.draw()
 
     def tick(self):
@@ -99,7 +100,6 @@ class Container(Canvas):
         # print(str(self.generate_counted_atoms_list()))
         self.replot()
         self._after = self.master.after(self.tick_rate, self.tick)
-
 
     def atoms_pos(self, scale=(1, 1)):
         output = []
@@ -119,15 +119,15 @@ class Container(Canvas):
             pixels[i] = (round(pixels[i][0]), round(pixels[i][1]))
         return pixels
 
-    #zwraca tuplę z zawartością: (prawdopodobienstwo_termodynamiczne,entropia)
+    # zwraca tuplę z zawartością: (prawdopodobienstwo_termodynamiczne,entropia)
     def entropy(self):
-        x=math.factorial(self.number_of_atoms)
-        y=1
+        x = math.factorial(self.number_of_atoms)
+        y = 1
         counted_atoms = self.generate_counted_atoms_list()
         for i in range(len(counted_atoms)):
-            y*=(math.factorial(counted_atoms[i]))
+            y *= (math.factorial(counted_atoms[i]))
 
-        return (x/y,math.log(x/y))
+        return x/y, math.log(x/y)
 
     def generate_counted_atoms_list(self):
         counted_atoms = np.zeros(self.frames_number)
@@ -135,5 +135,6 @@ class Container(Canvas):
         for i in self.atoms:
             counted_atoms[int(i.pos[0]//width)] += 1
         return counted_atoms
+
     def __str__(self):
         return f"Pojemnik po rozmiarach {self.width} x {self.height}, zawierający {len(self.atoms)} atomów"

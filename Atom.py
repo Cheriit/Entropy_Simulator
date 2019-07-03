@@ -79,64 +79,6 @@ class Atom:
     def distance(self, point):
         return math.sqrt((self.pos[0] - point.pos[0]) ** 2 + (self.pos[1] - point.pos[1]) ** 2)
 
-    def is_collision(self, point):
-        pos_source = self.pos
-        pos_target = point.pos
-        radius = self.radius *2
-
-        if self.pos[0] <= point.pos[0] + radius or \
-                self.pos[0] <= point.pos[0] - radius:
-            temp = self.speed[1]
-            self.speed = (self.speed[0], point.speed[1])
-            point.speed = (point.speed[0], temp)
-
-        else:
-            temp = self.speed[0]
-            self.speed = (point.speed[0], self.speed[1])
-            point.speed = (temp, point.speed[1])
-        radius = self.radius * 2
-
-        if self.distance(point) < radius / 2:
-            if self.pos[0] < point.pos[0]:
-                point_1_x = self.pos[0] - radius / 4
-                point_2_x = point.pos[0] + radius / 4
-            else:
-                point_1_x = self.pos[0] + radius / 4
-                point_2_x = point.pos[0] - radius / 4
-            if self.pos[1] < point.pos[1]:
-                point_1_y = self.pos[1] - radius / 4
-                point_2_y = point.pos[1] + radius / 4
-            else:
-                point_1_y = self.pos[1] + radius / 4
-                point_2_y = point.pos[1] - radius / 4
-            self.pos = (point_1_x, point_1_y)
-            point.pos = (point_2_x, point_2_y)
-
-        # alpha_1 = math.atan2(self.speed[1], self.speed[0])
-        # alpha_2 = math.atan2(point.speed[1], point.speed[0])
-        # phi = math.atan2(self.pos[1] - point.pos[1], self.pos[0] - point.pos[0])
-        # point_1_v = math.sqrt(self.speed[0] ** 2 + self.speed[1] ** 2)
-        # point_2_v = math.sqrt(point.speed[0] ** 2 + point.speed[1] ** 2)
-        # point_1_vx = point_2_v * math.cos(alpha_2 - phi) * math.cos(phi) + point_1_v * math.sin(
-        #     alpha_1 - phi) * math.cos(phi + math.pi / 2)
-        # point_1_vy = point_2_v * math.cos(alpha_2 - phi) * math.sin(phi) + point_1_v * math.sin(
-        #     alpha_1 - phi) * math.sin(phi + math.pi / 2)
-        # point_2_vx = point_1_v * math.cos(alpha_1 - phi) * math.cos(phi) + point_2_v * math.sin(
-        #     alpha_2 - phi) * math.cos(phi + math.pi / 2)
-        # point_2_vy = point_1_v * math.cos(alpha_1 - phi) * math.sin(phi) + point_2_v * math.sin(
-        #     alpha_2 - phi) * math.sin(phi + math.pi / 2)
-        # self.speed = (point_1_vx, point_1_vy)
-        # point.speed = (point_2_vx, point_2_vy)
-        #
-        # self.limit_speed()
-        # point.limit_speed()
-        """else:
-            point_1_vx = 0.5 * (self.speed[1] - point.speed[1]) * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) + 0.5 * (self.speed[0] + point.speed[0])
-            point_1_vy = 0.75 * ((self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) * (self.speed[0] - point.speed[0]) + 0.5 * self.speed[1]
-            point_2_vx = 0.5 * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) * (point.speed[1] - self.speed[1]) + 0.5 * point.speed[0]
-            point_2_vy = 0.5 * ((self.pos[1] - point.pos[1])/(point.pos[0] - self.pos[0])) * (point.speed[0] - self.speed[0]) - self.pos[1] + 0.5 * (self.speed[1] + point.speed[1])
-            self.speed = (point_1_vx, point_1_vy)
-            point.speed = (point_2_vx, point_2_vy)"""
     def is_collision_tryg(self, point):
         alpha_1 = math.atan2(self.speed[1], self.speed[0])
         alpha_2 = math.atan2(point.speed[1], point.speed[0])
@@ -156,6 +98,26 @@ class Atom:
 
         self.limit_speed()
         point.limit_speed()
+
+    def is_collision_vect(self, point):
+        vec_n = [self.pos[0] - point.pos[0], self.pos[1] - point.pos[1]]
+        len_n = math.sqrt(vec_n[0]**2 + vec_n[1]**2)
+        unit_n = [vec_n[0]/len_n, vec_n[1]/len_n]
+        unit_t = [-unit_n[1], unit_n[0]]
+        v_1n = unit_n[0]*self.speed[0] + unit_n[1]*self.speed[1]
+        v_1t = unit_t[0]*self.speed[0] + unit_t[1]*self.speed[1]
+        v_2n = unit_n[0]*point.speed[0] + unit_n[1]*point.speed[1]
+        v_2t = unit_t[0]*point.speed[0] + unit_t[1]*point.speed[1]
+        v_1n, v_2n = v_2n, v_1n
+        vec_v_1n = [unit_n[0] * v_1n, unit_n[1] * v_1n]
+        vec_v_1t = [unit_t[0] * v_1t, unit_t[1] * v_1t]
+        vec_v_2n = [unit_n[0] * v_2n, unit_n[1] * v_2n]
+        vec_v_2t = [unit_t[0] * v_2t, unit_t[1] * v_2t]
+        self.speed = (vec_v_1n[0] + vec_v_1t[0], vec_v_1n[1] + vec_v_1t[1])
+        point.speed = (vec_v_2n[0] + vec_v_2t[0], vec_v_2n[1] + vec_v_2t[1])
+        self.limit_speed()
+        point.limit_speed()
+
     def getState(self):
         x = int(round(self.pos[0]//50))
         y = int(round(self.pos[1]//50))

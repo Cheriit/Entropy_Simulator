@@ -19,14 +19,14 @@ class Window(Tk):
         self.title('Entropia')
 
         self.geometry(
-            str(self.frames_numbers * 55 +500) + 'x' + str((self.frames_numbers // 2) * 55 + 60)
+            str(self.frames_numbers * 55 +460) + 'x' + str((self.frames_numbers) * 50 + 80)
         )
 
         # self.frame_start = self.generate_frames()
         self.frame_start = Frame(master=self, background='#F3E77F')
         self.frame_start.pack(side=LEFT,fill=Y)
 
-        self.frame_start.place(x=1, y=1, width=self.frames_numbers * 51 , height=78)
+        self.frame_start.place(x=1, y=1, width=self.frames_numbers * 50 , height=80)
 
         self.container = Container(self, config['Container'], config['Atom'])
 
@@ -36,20 +36,21 @@ class Window(Tk):
         self.chart = chart(self)
         self.chart.place( y=80, x=self.frames_numbers * 51 ,width=600, height=400)
         self.chart.pack(side=RIGHT,fill=Y)
+        self.resizable(False, False)
 
     def get_frames_number(self):
         return self.frames_numbers
 
     def generate_buttons(self):
         self.button_generate = self.generate_button(self.frame_start, 'Generuj Atomy', self.generate_atoms, NORMAL,
-                                                    1, 40, 100, 20)
+                                                    10, 40, 100, 20)
 
         self.button_stop = self.generate_button(self.frame_start, 'STOP', self.STOP, DISABLED,
-                                                (self.frames_numbers * 55 - 79) // 2,
+                                                (self.frames_numbers * 50) // 2,
                                                 40, 100, 20)
 
         self.button_start = self.generate_button(self.frame_start, 'START', self.START, DISABLED,
-                                                 (self.frames_numbers * 55 - 279) // 2,
+                                                 (self.frames_numbers * 50 - 200) // 2,
                                                  40, 98, 20)
 
     def generate_button(self, master, text, command, state, x, y, width, height):

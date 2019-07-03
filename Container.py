@@ -42,10 +42,10 @@ class Container(Canvas):
 
     def generate_states(self):
         max_state_position = self.frames_number
-        max_state_speed = int(float(self.atomsConfig['max_speed'])*2)
+        max_state_speed = int(float(self.atomsConfig['max_speed'])*2)+1
         for v in range(max_state_position):
             for x in range(max_state_position):
-                for y in range(max_state_speed):
+                for y in range(max_state_speed+1):
                     for z in range(max_state_speed):
                         self.statesPerm.append([v,x,y,z])
 
@@ -94,7 +94,7 @@ class Container(Canvas):
             for j in range(i+1, self.number_of_atoms):
                 atom2 = self.atoms[j]
                 dist = atom1.distance(atom2)
-                if dist <= 2*radius+error and dist > radius:
+                if dist <= 2*radius and dist > radius*1.5:
                     atom1.is_collision(atom2)
                     atom1.limit_speed()
             atom1.is_wall()
@@ -139,10 +139,9 @@ class Container(Canvas):
         # x = math.factorial(self.number_of_atoms)
         y = 1.0
         counted_atoms = self.generate_counted_atoms_list()
-
         for i in range(len(counted_atoms)):
             y *= math.factorial(counted_atoms[i])
-
+        #Alternatywa - suma logartymow
         n = self.number_of_atoms
         x = n * math.log(n) - n
         print(str(x),str(math.log(y)))

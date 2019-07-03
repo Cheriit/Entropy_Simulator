@@ -39,8 +39,9 @@ class Atom:
         max_speed = self.max_speed
         min_speed = max_speed*-1
         speed = self.speed
+
         if speed[0] > max_speed:
-            self.speed =(max_speed, speed[1])
+            self.speed = (max_speed, speed[1])
         elif speed[0] < min_speed:
             self.speed = (min_speed, speed[1])
         if speed[1] > max_speed:
@@ -83,8 +84,8 @@ class Atom:
         pos_target = point.pos
         radius = self.radius *2
 
-        if abs(self.pos[0]) <= abs(point.pos[0] + radius ) or \
-                abs(self.pos[0]) <= abs(point.pos[0] - radius):
+        if self.pos[0] <= point.pos[0] + radius or \
+                self.pos[0] <= point.pos[0] - radius:
             temp = self.speed[1]
             self.speed = (self.speed[0], point.speed[1])
             point.speed = (point.speed[0], temp)
@@ -94,6 +95,7 @@ class Atom:
             self.speed = (point.speed[0], self.speed[1])
             point.speed = (temp, point.speed[1])
         radius = self.radius * 2
+
         if self.distance(point) < radius / 2:
             if self.pos[0] < point.pos[0]:
                 point_1_x = self.pos[0] - radius / 4
@@ -125,7 +127,9 @@ class Atom:
         #     alpha_2 - phi) * math.sin(phi + math.pi / 2)
         # self.speed = (point_1_vx, point_1_vy)
         # point.speed = (point_2_vx, point_2_vy)
-
+        #
+        # self.limit_speed()
+        # point.limit_speed()
         """else:
             point_1_vx = 0.5 * (self.speed[1] - point.speed[1]) * ((point.pos[0] - self.pos[0]) / (self.pos[1] - point.pos[1])) + 0.5 * (self.speed[0] + point.speed[0])
             point_1_vy = 0.75 * ((self.pos[1] - point.pos[1]) / (point.pos[0] - self.pos[0])) * (self.speed[0] - point.speed[0]) + 0.5 * self.speed[1]
@@ -133,18 +137,32 @@ class Atom:
             point_2_vy = 0.5 * ((self.pos[1] - point.pos[1])/(point.pos[0] - self.pos[0])) * (point.speed[0] - self.speed[0]) - self.pos[1] + 0.5 * (self.speed[1] + point.speed[1])
             self.speed = (point_1_vx, point_1_vy)
             point.speed = (point_2_vx, point_2_vy)"""
+    def is_collision_tryg(self, point):
+        alpha_1 = math.atan2(self.speed[1], self.speed[0])
+        alpha_2 = math.atan2(point.speed[1], point.speed[0])
+        phi = math.atan2(self.pos[1] - point.pos[1], self.pos[0] - point.pos[0])
+        point_1_v = math.sqrt(self.speed[0] ** 2 + self.speed[1] ** 2)
+        point_2_v = math.sqrt(point.speed[0] ** 2 + point.speed[1] ** 2)
+        point_1_vx = point_2_v * math.cos(alpha_2 - phi) * math.cos(phi) + point_1_v * math.sin(
+            alpha_1 - phi) * math.cos(phi + math.pi / 2)
+        point_1_vy = point_2_v * math.cos(alpha_2 - phi) * math.sin(phi) + point_1_v * math.sin(
+            alpha_1 - phi) * math.sin(phi + math.pi / 2)
+        point_2_vx = point_1_v * math.cos(alpha_1 - phi) * math.cos(phi) + point_2_v * math.sin(
+            alpha_2 - phi) * math.cos(phi + math.pi / 2)
+        point_2_vy = point_1_v * math.cos(alpha_1 - phi) * math.sin(phi) + point_2_v * math.sin(
+            alpha_2 - phi) * math.sin(phi + math.pi / 2)
+        self.speed = (point_1_vx, point_1_vy)
+        point.speed = (point_2_vx, point_2_vy)
 
+        self.limit_speed()
+        point.limit_speed()
     def getState(self):
-        x = int(self.pos[0]//50)
-        y = int(self.pos[1]//50)
+        x = int(round(self.pos[0]//50))
+        y = int(round(self.pos[1]//50))
         if x<0:
             x=0
-        elif x>8:
-            x=8
         if y<0:
             y=0
-        elif y>8:
-            y=8
-        Vx = int((self.speed[0]+self.max_speed))
-        Vy = int((self.speed[1]+self.max_speed))
+        Vx = int(round(self.speed[0]+self.max_speed))
+        Vy = int(round(self.speed[1]+self.max_speed))
         return [x,y,Vx,Vy]

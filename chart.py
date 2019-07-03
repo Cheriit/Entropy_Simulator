@@ -8,7 +8,7 @@ from matplotlib.figure import Figure
 class chart(tk.Frame):
     def __init__(self,parent):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Wykres entropii pojemnika obok")
+        label = tk.Label(self, text="Wykres entropii pojemnika, odświeżany co 10 tików")
         label.pack(pady=30, padx=0)
 
         self.plt = Figure(figsize=(5, 5), dpi=100)

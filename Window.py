@@ -43,15 +43,15 @@ class Window(Tk):
 
     def generate_buttons(self):
         self.button_generate = self.generate_button(self.frame_start, 'Generuj Atomy', self.generate_atoms, NORMAL,
-                                                    10, 40, 100, 20)
+                                                    10, 30, 100, 20)
 
         self.button_stop = self.generate_button(self.frame_start, 'STOP', self.STOP, DISABLED,
-                                                (self.frames_numbers * 50) // 2,
-                                                40, 100, 20)
+                                                (self.frames_numbers * 50 + 160) // 2,
+                                                30, 100, 20)
 
         self.button_start = self.generate_button(self.frame_start, 'START', self.START, DISABLED,
-                                                 (self.frames_numbers * 50 - 200) // 2,
-                                                 40, 98, 20)
+                                                 (self.frames_numbers * 50 - 40) // 2,
+                                                 30, 100, 20)
 
     def generate_button(self, master, text, command, state, x, y, width, height):
         button = Button(master=master, text=text, command=command)

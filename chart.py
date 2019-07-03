@@ -8,8 +8,8 @@ from matplotlib.figure import Figure
 class chart(tk.Frame):
     def __init__(self,parent):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Entopia!")
-        label.pack(pady=10, padx=10)
+        # label = tk.Label(self, text="Entopia!")
+        # label.pack(pady=10, padx=10)
 
         self.plt = Figure(figsize=(5, 5), dpi=100)
         # self.plt.add_subplot(111).plot([0], [0])

@@ -81,7 +81,9 @@ class Container(Canvas):
             atom1 = self.atoms[i]
             for j in range(i+1, self.number_of_atoms):
                 atom2 = self.atoms[j]
-                if atom1.distance(atom2) <= 2*radius-error:
+                #Wykrywanie kolizji nie wewnątrz!!!
+                dist = atom1.distance(atom2)
+                if dist <= 2*radius-error and dist > radius + error:
                     atom1.is_collision(atom2)
             atom1.is_wall()
 

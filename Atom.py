@@ -80,6 +80,7 @@ class Atom:
         return math.sqrt((self.pos[0] - point.pos[0]) ** 2 + (self.pos[1] - point.pos[1]) ** 2)
 
     def is_collision_tryg(self, point):
+
         alpha_1 = math.atan2(self.speed[1], self.speed[0])
         alpha_2 = math.atan2(point.speed[1], point.speed[0])
         phi = math.atan2(self.pos[1] - point.pos[1], self.pos[0] - point.pos[0])
@@ -113,6 +114,7 @@ class Atom:
         vec_v_1t = [unit_t[0] * v_1t, unit_t[1] * v_1t]
         vec_v_2n = [unit_n[0] * v_2n, unit_n[1] * v_2n]
         vec_v_2t = [unit_t[0] * v_2t, unit_t[1] * v_2t]
+
         self.speed = (vec_v_1n[0] + vec_v_1t[0], vec_v_1n[1] + vec_v_1t[1])
         point.speed = (vec_v_2n[0] + vec_v_2t[0], vec_v_2n[1] + vec_v_2t[1])
         self.limit_speed()

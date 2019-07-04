@@ -64,8 +64,8 @@ class Container(Canvas):
                 Atom(self, r.randint(int(self.atomsConfig['radius']), self.width - int(self.atomsConfig['radius'])),
                      r.randint(int(self.atomsConfig['radius']), (self.frames_number) * self.width) - int(
                          self.atomsConfig['radius']),
-                     r.uniform(int(self.config['min_speed']), int(self.config['max_speed'])),
-                     r.uniform(int(self.config['min_speed']), int(self.config['max_speed'])),
+                     r.uniform(int(self.config['min_speed'])/5, int(self.config['max_speed'])/5),
+                     r.uniform(int(self.config['min_speed'])/5, int(self.config['max_speed'])/5),
                      str(i),
                      self.atomsConfig)
                 )
@@ -94,8 +94,8 @@ class Container(Canvas):
             for j in range(i+1, self.number_of_atoms):
                 atom2 = self.atoms[j]
                 dist = atom1.distance(atom2)
-                if dist <= 2*radius and dist > radius*1.5:
-                    atom1.is_collision(atom2)
+                if dist <= 2*radius and dist > radius*1.6:
+                    atom1.is_collision_vect(atom2)
                     atom1.limit_speed()
             atom1.is_wall()
 

@@ -6,7 +6,7 @@ import math
 class Atom:
     def __init__(self, master, x, y, speed_x, speed_y, name, config):
         self.config = config
-        self.pos = [x, y]
+        self.pos = (x, y)
         self.speed = [speed_x, speed_y]
         self.radius = float(self.config['radius'])
         self.name = name
@@ -63,16 +63,16 @@ class Atom:
         # if self.pos[1] < 0 or self.pos[1] > max_y:
         #     self.speed = (self.speed[0], -self.speed[1])
 
-        if pos[0] < radius:
+        if pos[0] <= radius:
             self.speed = (-speed[0], speed[1])
             self.pos = (radius, pos[1])
-        elif pos[0] > max_x:
+        elif pos[0] >= max_x:
             self.speed = (-speed[0], speed[1])
             self.pos = (max_x, pos[1])
-        elif pos[1] < 0:
+        elif pos[1] <= 0:
             self.speed = (speed[0], -speed[1])
             self.pos = (pos[0], 0)
-        elif pos[1] > max_y:
+        elif pos[1] >= max_y:
             self.speed = (speed[0], -speed[1])
             self.pos = (pos[0], max_y)
 
@@ -101,7 +101,7 @@ class Atom:
         point.limit_speed()
 
     def is_collision_vect(self, point):
-        vec_n = [self.pos[0] - point.pos[0], self.pos[1] - point.pos[1]]
+        vec_n = [point.pos[0] - self.pos[0], point.pos[1] - self.pos[1]]
         len_n = math.sqrt(vec_n[0]**2 + vec_n[1]**2)
         unit_n = [vec_n[0]/len_n, vec_n[1]/len_n]
         unit_t = [-unit_n[1], unit_n[0]]

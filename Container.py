@@ -10,11 +10,6 @@ from Atom import Atom
 
 class Container(Canvas):
     def __init__(self, master, containerConfig, atomConfig):
-        """
-        Inicjuje pojemnik, zawierający atomy. Właściwoći definiuje config
-        Na ten moment liczba atomów jest związana z wysokością tablicy i jest jer równa,
-         a każdy atom pojawia się na środku komórki
-        """
         self.config = containerConfig
         self.width = int(self.config['width'])
         self.height = int(self.config['height'])
@@ -45,7 +40,7 @@ class Container(Canvas):
         max_state_speed = int(float(self.atomsConfig['max_speed'])*2)+1
         for v in range(max_state_position):
             for x in range(max_state_position):
-                for y in range(max_state_speed+1):
+                for y in range(max_state_speed):
                     for z in range(max_state_speed):
                         self.statesPerm.append([v,x,y,z])
 
@@ -61,11 +56,11 @@ class Container(Canvas):
         atoms = []
         for i in range(self.number_of_atoms):
             atoms.append(
-                Atom(self, r.randint(int(self.atomsConfig['radius']), self.width - int(self.atomsConfig['radius'])),
-                     r.randint(int(self.atomsConfig['radius']), (self.frames_number) * self.width) - int(
+                Atom(self, r.randint(float(self.atomsConfig['radius']), self.width - float(self.atomsConfig['radius'])),
+                     r.randint(float(self.atomsConfig['radius']), (self.frames_number) * self.width) - float(
                          self.atomsConfig['radius']),
-                     r.uniform(int(self.config['min_speed'])/5, int(self.config['max_speed'])/5),
-                     r.uniform(int(self.config['min_speed'])/5, int(self.config['max_speed'])/5),
+                     r.uniform(float(self.config['min_speed']), float(self.config['max_speed'])),
+                     r.uniform(float(self.config['min_speed']), float(self.config['max_speed'])),
                      str(i),
                      self.atomsConfig)
                 )
@@ -94,7 +89,7 @@ class Container(Canvas):
             for j in range(i+1, self.number_of_atoms):
                 atom2 = self.atoms[j]
                 dist = atom1.distance(atom2)
-                if dist <= 2*radius and dist > radius*1.6:
+                if dist <= 2*radius - error and dist > radius*1.75:
                     atom1.is_collision_vect(atom2)
                     atom1.limit_speed()
             atom1.is_wall()
@@ -102,7 +97,7 @@ class Container(Canvas):
     def replot(self):
         self.x.append(self.tickCount)
         self.y.append(self.entropy())
-        yNew = gaussian_filter1d(self.y, sigma=2)
+        yNew = gaussian_filter1d(self.y, sigma=1.8)
         self.master.chart.plot(self.x,yNew)
 
 
@@ -136,11 +131,12 @@ class Container(Canvas):
 
     # zwraca tuplę z zawartością: (prawdopodobienstwo_termodynamiczne,entropia)
     def entropy(self):
-        # x = math.factorial(self.number_of_atoms)
         y = 1.0
         counted_atoms = self.generate_counted_atoms_list()
         for i in range(len(counted_atoms)):
             y *= math.factorial(counted_atoms[i])
+        # x = math.factorial(self.number_of_atoms)
+        # probability = x / y
         #Alternatywa - suma logartymow
         n = self.number_of_atoms
         x = n * math.log(n) - n

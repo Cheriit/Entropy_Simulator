@@ -101,7 +101,7 @@ class Atom:
         point.limit_speed()
 
     def is_collision_vect(self, point):
-        vec_n = [self.pos[0] - point.pos[0], self.pos[1] - point.pos[1]]
+        vec_n = [point.pos[0] - self.pos[0], point.pos[1] - self.pos[1]]
         len_n = math.sqrt(vec_n[0]**2 + vec_n[1]**2)
         unit_n = [vec_n[0]/len_n, vec_n[1]/len_n]
         unit_t = [-unit_n[1], unit_n[0]]

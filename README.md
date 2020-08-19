@@ -2,9 +2,6 @@
 Simple entropy simulator in 2D environment. 
 
 ## Required Libraries:
-*
-*
-*
 ```
 pip install -r ./requirements.txt
 ```
